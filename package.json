@@ -1,0 +1,22 @@
+{
+  "name": "garageIoT",
+  "version": "0.0.1",
+  "description": "Project code for the garageIoT.",
+  "main": "index.js",
+  "dependencies": {
+    "aws-iot-device-sdk": "^2.2.1"
+  },
+  "scripts": {
+    "test": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ZachG22/garageIoT.git"
+  },
+  "author": "Zach Giordano",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ZachG22/garageIoT/issues"
+  },
+  "homepage": "https://github.com/ZachG22/garageIoT#readme"
+}
