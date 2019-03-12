@@ -4,8 +4,16 @@ const awsIoT = require('aws-iot-device-sdk');
 // Include config
 const config = require('./config.js');
 
+// Include file
+const check = require('./checkIds.js');
+
 // Include path
 const path = require('path');
+
+// Include shell
+const shell = require('shelljs');
+const setPinScript = 'bash ' + path.join(__dirname, 'setPin.sh');
+const garageScriptCommand = 'bash ' + path.join(__dirname, 'garageScript.sh');
 
 const deviceParams = {
 	host: config.host,
@@ -16,38 +24,31 @@ const deviceParams = {
 	region: config.AWS.region
 };
 
-const jobs = awsIoT.jobs(deviceParams);
+// Set garagepin out
+shell.exec(setPinScript);
 
-jobs.on('connect', () => {
-	jobs.subscribe('Garage');
+const device = awsIoT.device(deviceParams);
+
+device.on('connect', () => {
+	console.log("Connected");
+	device.subscribe('Garage');
 });
 
-jobs.on('message', (topic, payload) => {
+device.on('message', async (topic, payload) => {
 	var payload = JSON.parse(payload.toString());
 
 	console.log(payload);
 
 	if(topic === 'Garage') {
-		console.log(payload.operation);
-	}
-});
-
-jobs.subscribeToJobs(deviceParams.clientId, (err, job) => {
-	if (err) {
-		console.log("Error: " + err);
-	} else {
-		console.log("New custom job with jobId: " + job.id.toString());
-
-		job.inProgress();
-		console.log("Completing the job!");
-		job.succeeded();
-	}
-});
-
-jobs.startJobNotifications(deviceParams.clientId, (err) => {
-	if (err) {
-		console.log("Error: " + err);
-	} else {
-		console.log("Job notifications started for thing: " + deviceParams.clientId);
+		try {
+			const jobId = payload.id;
+			console.log(jobId);
+			if(check.isUniqueId(jobId)) {
+				//shell.exec(garageScriptCommand);
+				console.log("\nRunning " + jobId + "\n");
+			}
+		} catch(err) {
+			console.log(err);
+		}
 	}
 });
