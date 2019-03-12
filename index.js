@@ -44,7 +44,7 @@ device.on('message', async (topic, payload) => {
 			const jobId = payload.id;
 			console.log(jobId);
 			if(check.isUniqueId(jobId)) {
-				//shell.exec(garageScriptCommand);
+				shell.exec(garageScriptCommand);
 				console.log("\nRunning " + jobId + "\n");
 			}
 		} catch(err) {
